@@ -1,0 +1,5 @@
+._4u8
+.uiStreamSponsoredLink < .userContentWrapper
+.adsCategoryTitleLink < .photoUfiContainer .ego_unit_no_top_border
+.adsCategoryTitleLink < #pagelet_side_ads .ego_unit
+.adsCategoryTitleLink < #pagelet_ego_pane .ego_unit
