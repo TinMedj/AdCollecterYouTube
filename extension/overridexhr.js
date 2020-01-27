@@ -84,7 +84,7 @@ function getVideoHostDetails(doc,dataToSend){
     dataToSend.host_video.date = dateOfLunch;
    
   var channelImg = doc.querySelectorAll('div[class="style-scope ytd-video-secondary-info-renderer"] a img[class="style-scope yt-img-shadow"]')[0].getAttribute("src");
-  var channel = doc.querySelectorAll('div[class="style-scope ytd-channel-name"] div[class="style-scope ytd-channel-name"] a[class="yt-simple-endpoint style-scope yt-formatted-string"]')[0];
+  var channel = doc.querySelectorAll( 'div[id="upload-info"] div[class="style-scope ytd-channel-name"] div[class="style-scope ytd-channel-name"] a[class="yt-simple-endpoint style-scope yt-formatted-string"]')[0];
   var channel_link = "https://www.youtube.com"+channel.getAttribute("href");  
   var channel_name = channel.innerHTML;
   var description = doc.querySelectorAll('div[class="style-scope ytd-expander"] div[id="description"] yt-formatted-string')[0].innerHTML;
@@ -291,9 +291,7 @@ XHR.send = function(postData) {
              }
 
             
-                getVideoHostDetails(document,dataToSend);
-
-
+                
                 //test if it's an ad or not !
                 if(document.getElementsByClassName("ytp-ad-player-overlay-instream-info").length > 0){
                   console.log("this is an ad");
@@ -301,28 +299,29 @@ XHR.send = function(postData) {
                   if (nbrClick == 1 ) {
                     dataToSend.connected = true;
                    getUser(document,dataToSend);} 
+                   
                   if(id_ad.length==11 )  dataToSend.ad.ad_link ="https://www.youtube.com/watch?v="+id_ad;    
                   if(id_ad =="" && oldLink.length==11){
                    dataToSend.ad.ad_link ="https://www.youtube.com/watch?v="+oldLink;
                    oldLink = "";
-                   id_ad="";
                  }
                   console.log(dataToSend.ad.ad_link);
                   getAdvertiser(document,dataToSend);
                   getAdReasons(document,dataToSend);
+                  getVideoHostDetails(document,dataToSend);
                   
                   if (dataToSend.ad.ad_link != "") sendDataToBackground(dataToSend);
                }
                 else{
 
-                    console.log("this is not an ad");
-                     //this is to test if there is any floating ad
-                    if(document.getElementsByClassName("ytp-ad-text-overlay").length > 0){ 
-                       if (nbrClick == 1 ) {
-                    dataToSend.connected = true;
-                    console.log("connected "+dataToSend.connected);
-                   getUser(document,dataToSend);}
-                         
+                      console.log("this is not an ad");
+                       //this is to test if there is any floating ad
+                      if(document.getElementsByClassName("ytp-ad-text-overlay").length > 0){ 
+                         if (nbrClick == 1 ) {
+                      dataToSend.connected = true;
+                      console.log("connected "+dataToSend.connected);
+                      getUser(document,dataToSend);}
+                      getVideoHostDetails(document,dataToSend);  
                       console.log("this is a floating ad");
                       getFloatingAd(document,dataToSend);
                       d = new Date();
