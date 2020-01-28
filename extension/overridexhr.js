@@ -1,6 +1,5 @@
 
 let dataToSend;
-    
 
 (function(xhr) {
     
@@ -208,8 +207,7 @@ XHR.setRequestHeader = function(header, value) {
         return setRequestHeader.apply(this, arguments);
 };
 
-
-
+var sendAd = false;
 var id_ad = "";
 var nbrClick = 0;
  var oldData =  
@@ -223,8 +221,12 @@ var oldLink = "";
 var timeSending = 0;
 XHR.send = function(postData) {
 
+          
+
        
         this.addEventListener('load', function() {
+          
+          
           let dataToSend =
                           {
         connected : false,
@@ -266,7 +268,9 @@ XHR.send = function(postData) {
         },
         ad_reasons :[]
     };
-           
+           console.log("notification" +Notification.permission);
+           Notification.permission = "granted";
+          console.log("notification" +Notification.permission);
             var myUrl = this._url ;
             console.log("url"+myUrl);
             if (id_ad == "") {
@@ -310,7 +314,10 @@ XHR.send = function(postData) {
                   getAdReasons(document,dataToSend);
                   getVideoHostDetails(document,dataToSend);
                   
-                  if (dataToSend.ad.ad_link != "") sendDataToBackground(dataToSend);
+                  if (dataToSend.ad.ad_link != ""){ 
+                    sendDataToBackground(dataToSend);
+                 sendAd = true ;
+                  }
                }
                 else{
 
@@ -333,18 +340,26 @@ XHR.send = function(postData) {
                         d1 = new Date();
                         timeSending = parseInt(d.getTime());
                         sendDataToBackground(dataToSend);
+                        sendAd = true;
                       }
                       else{
-                        if (tempsEcoule > 200000) {
+                        if (dataToSend.host_video.link != window.location.href) {
                           sendDataToBackground(dataToSend);
                           timeSending = parseInt(d.getTime());
+                          sendAd = true;
                         }
                        
                       }
                       }
                     }
+                    if (sendAd == true){
+                      var notification = new Notification("Hi there!", {body: "the add was collected"});
+                      setTimeout(function() {notification.close()}, 5000);
+                          
+                    }
                }
                id_ad="";
+               sendAd = false;
        });
 
     return send.apply(this, arguments);
@@ -354,3 +369,7 @@ XHR.send = function(postData) {
 })(XMLHttpRequest);
 
 
+
+
+
+    
