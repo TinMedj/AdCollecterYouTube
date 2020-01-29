@@ -218,6 +218,7 @@ var nbrClick = 0;
        img : ""       
 };
 var oldLink = "";
+var oldLinkHostVideo = "";
 var timeSending = 0;
 XHR.send = function(postData) {
 
@@ -312,9 +313,9 @@ XHR.send = function(postData) {
                   console.log(dataToSend.ad.ad_link);
                   getAdvertiser(document,dataToSend);
                   getAdReasons(document,dataToSend);
-                  getVideoHostDetails(document,dataToSend);
-                  
+                                 
                   if (dataToSend.ad.ad_link != ""){ 
+                    getVideoHostDetails(document,dataToSend);
                     sendDataToBackground(dataToSend);
                  sendAd = true ;
                   }
@@ -328,24 +329,23 @@ XHR.send = function(postData) {
                       dataToSend.connected = true;
                       console.log("connected "+dataToSend.connected);
                       getUser(document,dataToSend);}
-                      getVideoHostDetails(document,dataToSend);  
                       console.log("this is a floating ad");
                       getFloatingAd(document,dataToSend);
-                      d = new Date();
-                      console.log(timeSending);
-                      tempsEcoule = parseInt(d.getTime()) - timeSending;
                       if (!isTheSame(dataToSend,oldData) ){
+                        console.log("here1");
                         oldData = dataToSend.ad_floating;
-                        console.log(oldData);
-                        d1 = new Date();
-                        timeSending = parseInt(d.getTime());
+                        getVideoHostDetails(document,dataToSend);
+                        oldLinkHostVideo = dataToSend.host_video.link;
+                        
                         sendDataToBackground(dataToSend);
                         sendAd = true;
                       }
                       else{
-                        if (dataToSend.host_video.link != window.location.href) {
+                        if (oldLinkHostVideo != window.location.href) {
+                          console.log("here : "+dataToSend.host_video.link+" ok "+ window.location.href);
+                          getVideoHostDetails(document,dataToSend);
                           sendDataToBackground(dataToSend);
-                          timeSending = parseInt(d.getTime());
+                          oldLinkHostVideo = dataToSend.host_video.link;
                           sendAd = true;
                         }
                        
