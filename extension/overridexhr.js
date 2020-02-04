@@ -163,7 +163,7 @@ function getUser(doc,dataToSend){
               var urlSlit = url.split("/");
               video_id = urlSplit[4];
          }  
-             if (video_id != lunched_video_id) {
+             if (video_id != lunched_video_id && video_id.length == 11) {
                 rightOne = true;
                 
               }
@@ -370,14 +370,14 @@ XHR.send = function(postData) {
             if (id_ad == "") {
             id_ad = getAdUrl(myUrl);
             if(id_ad!=""){
-              if(oldLink!="") newAd = id_ad;
+              if(oldLink.length!="") newAd = id_ad;
               else oldLink = id_ad;
             }
             else{
-              if(oldLink =="" && newAd != "") oldLink = newAd;
+              if(oldLink.length=="" && newAd != "") {oldLink = newAd; newAd = "";}
             }
 
-            console.log("oldLink"+oldLink);
+            console.log("oldLink "+oldLink +" new ad"+newAd);
             }
             if(oldLink!=""){  adLink ="https://www.youtube.com/watch?v="+oldLink;
                              }
@@ -427,7 +427,7 @@ XHR.send = function(postData) {
                 else{
 
                   if(ad == true){
-                        data.ad.ad_link = adLink;  oldLink = "";
+                        data.ad.ad_link = adLink;  oldLink ="";
                        data.ad.skeept_or_not = adSkept; adSkept = false;
                        data.ad.checked_or_not = Adcheked; Adcheked = false;
                        data.ad.reason_cheked = reasonsCheked; reasonsCheked = false;
@@ -436,6 +436,7 @@ XHR.send = function(postData) {
                        sendDataToBackground(data); 
                        sendAd = true;
                        ad = false;
+                       oldLink = "";
                   }
 
                       console.log("this is not an ad");
