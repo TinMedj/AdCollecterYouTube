@@ -1,5 +1,12 @@
 
-let dataToSend;
+var Adcheked = false;
+var reasonsCheked = false;
+var adSkept = false;
+var channelCheked =false;
+var floatAdReasonCheked = false;
+var floatAdRemoved = false;
+var adFloatCheking = false;
+
 
 (function(xhr) {
     
@@ -188,6 +195,74 @@ function getUser(doc,dataToSend){
   }
 
 
+  var advertiserCheked = function(){
+     Adcheked = true;
+  };
+
+  var ChekingReasons = function(){
+
+    reasonsCheked = true;
+
+  };
+
+  var skeepingAd = function(){
+     adSkept = true;
+  };
+
+  var channelCheking = function(){
+    channelCheked = true;
+  };
+
+
+  
+  function adListeners(){
+    console.log("Am In");
+    chik = false;
+     var buttonAdvertiser = document.querySelectorAll('button[class="ytp-ad-button ytp-ad-visit-advertiser-button ytp-ad-button-link"]')[0];
+         buttonAdvertiser.addEventListener("click", advertiserCheked) ;
+     var buttonInfo = document.querySelectorAll('button[class="ytp-ad-button ytp-ad-button-link ytp-ad-clickable"]')[0];
+         buttonInfo.addEventListener("click", ChekingReasons);
+     var buttonSkeep = document.querySelectorAll('button[class="ytp-ad-skip-button ytp-button"]')[0];
+        if( buttonSkeep != null)  buttonSkeep.addEventListener("click", skeepingAd);
+         console.log("cheked "+reasonsCheked);
+     var linkToChennel = document. querySelectorAll('div[class="ytp-title-subtext"] a[class="ytp-title-channel-name"]')[0];
+         linkToChennel.addEventListener("click", channelCheking);
+     var buttonAdvertiser2 = document.querySelectorAll('div[class="ytp-ad-player-overlay-flyout-cta"]')[0];
+         buttonAdvertiser2.addEventListener("click", advertiserCheked);
+
+  }
+
+
+  var chekreasonsForFloatAd = function(){
+
+    floatAdReasonCheked = true;
+  };
+
+  var closeFloatAd = function(){
+      floatAdRemoved = true;
+      console.log("removed ad "+floatAdRemoved);
+
+  };
+
+  var adFloatCheking = function(){
+      adFloatCheked = true;
+  };
+
+
+
+  function adFloatingListener(){
+    console.log(" listeners done");
+       var infoAd = document.querySelectorAll('button[class="ytp-ad-button ytp-ad-button-link ytp-ad-clickable"]')[0];
+           infoAd.addEventListener("click", chekreasonsForFloatAd);
+       var closeButton = document.querySelectorAll('button[class="ytp-ad-overlay-close-button"]')[0];
+           closeButton.addEventListener("click", closeFloatAd);  
+  }
+
+
+
+
+
+
 var XHR = XMLHttpRequest.prototype;
     var open = XHR.open;
     var send = XHR.send;
@@ -207,9 +282,17 @@ XHR.setRequestHeader = function(header, value) {
         return setRequestHeader.apply(this, arguments);
 };
 
+
+var sendNonSkeptAd = false;
+var ad = false;
+var floatAd = false;
+var adLink = "";
 var sendAd = false;
 var id_ad = "";
 var nbrClick = 0;
+var data = null;
+var floatData = null;
+var shouldSend = false;
  var oldData =  
 {
        title :["",""],
@@ -219,7 +302,11 @@ var nbrClick = 0;
 };
 var oldLink = "";
 var oldLinkHostVideo = "";
-var timeSending = 0;
+var newAd = "";
+
+
+
+
 XHR.send = function(postData) {
 
           
@@ -246,7 +333,8 @@ XHR.send = function(postData) {
               nbr_followers : "",
               total_views : "",
               partial_views : "",
-              channel_description : ""
+              channel_description : "",
+              channel_cheked : false
         },
         ad_or_not : false,
         ad : {
@@ -258,34 +346,46 @@ XHR.send = function(postData) {
               ad_channel_img  : "",
               ad_page_img : "",
               ad_page_desctiption : "",
-              ad_page_link : ""
+              ad_page_link : "",
+              skeept_or_not : false,
+              checked_or_not : false,
+              reason_cheked : false
         },
         ad_floating:{
 
               title :[],
               description : [],
               link :[],
-              img : ""
+              img : "",
+              ad_reason_cheked : false,
+              ad_removed : false,
+             
         },
         ad_reasons :[]
     };
-           console.log("notification" +Notification.permission);
-           Notification.permission = "granted";
-          console.log("notification" +Notification.permission);
+
+           
             var myUrl = this._url ;
             console.log("url"+myUrl);
             if (id_ad == "") {
             id_ad = getAdUrl(myUrl);
-            if (id_ad != "") oldLink = id_ad;
+            if(id_ad!=""){
+              if(oldLink!="") newAd = id_ad;
+              else oldLink = id_ad;
+            }
+            else{
+              if(oldLink =="" && newAd != "") oldLink = newAd;
+            }
+
             console.log("oldLink"+oldLink);
             }
-             //to say that it's a lunched video
-            if (window.location.href.indexOf("watch")> -1) {
-               if(nbrClick==0){
+            if(oldLink!=""){  adLink ="https://www.youtube.com/watch?v="+oldLink;
+                             }
+
+            if(nbrClick==0){
                 var userBtn = document.getElementById("avatar-btn");
                 if(userBtn!=null)
-                {
-                   userBtn.click();
+                {  userBtn.click();
                    nbrClick++;
                    userBtn.click();
                     dataToSend.connected = true;
@@ -294,70 +394,117 @@ XHR.send = function(postData) {
                    
                 }
              }
+             //to say that it's a lunched video
+            if (window.location.href.indexOf("watch")> -1) {
+               
 
-            
+               
                 
                 //test if it's an ad or not !
                 if(document.getElementsByClassName("ytp-ad-player-overlay-instream-info").length > 0){
                   console.log("this is an ad");
+                  ad = true;
+                  adListeners();
+                  
                   dataToSend.ad_or_not = true;
                   if (nbrClick == 1 ) {
                     dataToSend.connected = true;
                    getUser(document,dataToSend);} 
                    
-                  if(id_ad.length==11 )  dataToSend.ad.ad_link ="https://www.youtube.com/watch?v="+id_ad;    
+                  /*if(id_ad.length==11 )  adLink ="https://www.youtube.com/watch?v="+id_ad;    
                   if(id_ad =="" && oldLink.length==11){
-                   dataToSend.ad.ad_link ="https://www.youtube.com/watch?v="+oldLink;
+                   adLink ="https://www.youtube.com/watch?v="+oldLink;
                    oldLink = "";
-                 }
-                  console.log(dataToSend.ad.ad_link);
+                 }*/
                   getAdvertiser(document,dataToSend);
-                  getAdReasons(document,dataToSend);
-                                 
-                  if (dataToSend.ad.ad_link != ""){ 
-                    getVideoHostDetails(document,dataToSend);
-                    sendDataToBackground(dataToSend);
-                 sendAd = true ;
-                  }
+                  getAdReasons(document,dataToSend); 
+                  getVideoHostDetails(document,dataToSend);           
+                 /* if (oldLink.length == 11){ 
+                    adLink = "https://www.youtube.com/watch?v="+oldLink;
+                  }*/
+                  data = dataToSend;   
                }
                 else{
 
+                  if(ad == true){
+                        data.ad.ad_link = adLink;  oldLink = "";
+                       data.ad.skeept_or_not = adSkept; adSkept = false;
+                       data.ad.checked_or_not = Adcheked; Adcheked = false;
+                       data.ad.reason_cheked = reasonsCheked; reasonsCheked = false;
+                       data.host_video.channel_cheked = channelCheked; channelCheked = false;
+                      
+                       sendDataToBackground(data); 
+                       sendAd = true;
+                       ad = false;
+                  }
+
                       console.log("this is not an ad");
                        //this is to test if there is any floating ad
-                      if(document.getElementsByClassName("ytp-ad-text-overlay").length > 0){ 
+                      if(document.getElementsByClassName("ytp-ad-text-overlay").length > 0){
+                      adFloatingListener(); 
                          if (nbrClick == 1 ) {
                       dataToSend.connected = true;
-                      console.log("connected "+dataToSend.connected);
+                      floatAd = true;
                       getUser(document,dataToSend);}
+
+
                       console.log("this is a floating ad");
+                      
                       getFloatingAd(document,dataToSend);
+                      
                       if (!isTheSame(dataToSend,oldData) ){
-                        console.log("here1");
+                        if(shouldSend){
+                           console.log("save ad float before"); 
+                           floatData.ad_floating.ad_reason_cheked = floatAdReasonCheked; floatAdReasonCheked = false;
+                           floatData.ad_floating.ad_removed = floatAdRemoved; floatAdRemoved = false;
+                           sendDataToBackground(floatData);
+                           shouldSend = false;
+                           sendAd = true;
+                        }
                         oldData = dataToSend.ad_floating;
                         getVideoHostDetails(document,dataToSend);
                         oldLinkHostVideo = dataToSend.host_video.link;
-                        
-                        sendDataToBackground(dataToSend);
-                        sendAd = true;
+                        floatData = dataToSend;
+                        shouldSend = true;
+
                       }
                       else{
+
                         if (oldLinkHostVideo != window.location.href) {
-                          console.log("here : "+dataToSend.host_video.link+" ok "+ window.location.href);
+                          
                           getVideoHostDetails(document,dataToSend);
-                          sendDataToBackground(dataToSend);
+                          floatData = dataToSend;
                           oldLinkHostVideo = dataToSend.host_video.link;
-                          sendAd = true;
+                          shouldSend = true;
                         }
                        
                       }
                       }
+                      else{
+
+                          if(floatAd ==true && shouldSend == true){
+                          console.log("save ad float after");  
+                            floatData.ad_floating.ad_reason_cheked = floatAdReasonCheked; floatAdReasonCheked = false;  
+                            floatData.ad_floating.ad_removed = floatAdRemoved; floatAdRemoved = false;
+                            sendDataToBackground(floatData);
+                            floatAd = false;
+                            sendAd = true;
+                            shouldSend = false;
+                          }
+
+
+                      }
                     }
+                   
+
                     if (sendAd == true){
                       var notification = new Notification("Hi there!", {body: "the add was collected"});
                       setTimeout(function() {notification.close()}, 5000);
+
                           
                     }
                }
+               
                id_ad="";
                sendAd = false;
        });
