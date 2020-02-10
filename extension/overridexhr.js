@@ -112,8 +112,12 @@ function getUser(doc,dataToSend){
       
       var userName = doc.getElementById("account-name").getAttribute("title");
       var userEmail = doc.getElementById("email").getAttribute("title");
+      var idUser = window["ytInitialData"]["responseContext"]["serviceTrackingParams"][1]["params"][1]["value"];
+      console.log("idUser "+idUser);
         dataToSend.user.name = userName;
         dataToSend.user.email = userEmail;
+        dataToSend.user.id = idUser;
+
       
     }
 
@@ -191,6 +195,7 @@ function getUser(doc,dataToSend){
     d = new Date();
     dateActuel = d.toLocaleDateString()+' - '+d.toLocaleTimeString()+'.';
    dataToSend.time = dateActuel; 
+   
    sendToBackground("here is the data",dataToSend);
   }
 
@@ -320,6 +325,7 @@ XHR.send = function(postData) {
         connected : false,
         time : "",
         user : {
+              id : "",
               name : "none",
               email : 'none'
         },
@@ -367,6 +373,7 @@ XHR.send = function(postData) {
            
             var myUrl = this._url ;
             console.log("url"+myUrl);
+            console.log("variable globale :"+window["ytInitialData"]["responseContext"]["serviceTrackingParams"][1]["params"][1]["value"]);
             if (id_ad == "") {
             id_ad = getAdUrl(myUrl);
             if(id_ad!=""){
@@ -397,7 +404,7 @@ XHR.send = function(postData) {
              //to say that it's a lunched video
             if (window.location.href.indexOf("watch")> -1) {
                
-
+                
                
                 
                 //test if it's an ad or not !
