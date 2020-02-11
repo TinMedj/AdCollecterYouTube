@@ -377,11 +377,11 @@ XHR.send = function(postData) {
             if (id_ad == "") {
             id_ad = getAdUrl(myUrl);
             if(id_ad!=""){
-              if(oldLink.length!="") newAd = id_ad;
+              if(oldLink!="") newAd = id_ad;
               else oldLink = id_ad;
             }
             else{
-              if(oldLink.length=="" && newAd != "") {oldLink = newAd; newAd = "";}
+              if(oldLink=="" && newAd != "") {oldLink = newAd; newAd = "";}
             }
 
             console.log("oldLink "+oldLink +" new ad"+newAd);
