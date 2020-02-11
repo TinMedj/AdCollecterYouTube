@@ -85,8 +85,8 @@ function getVideoHostDetails(doc,dataToSend){
     
     dataToSend.host_video.name = videoName;
     dataToSend.host_video.link = window.location.href;
-    dataToSend.host_video.total_views = viewsAll;
-    dataToSend.host_video.partial_views = viewsNotAll;
+    dataToSend.host_video.total_views = viewsAll.replace("&nbsp;"," ");
+    dataToSend.host_video.partial_views = viewsNotAll.replace("&nbsp;"," ").replace("&nbsp;"," ");
     dataToSend.host_video.date = dateOfLunch;
    
   var channelImg = doc.querySelectorAll('div[class="style-scope ytd-video-secondary-info-renderer"] a img[class="style-scope yt-img-shadow"]')[0].getAttribute("src");
@@ -95,12 +95,15 @@ function getVideoHostDetails(doc,dataToSend){
   var channel_name = channel.innerHTML;
   var description = doc.querySelectorAll('div[class="style-scope ytd-expander"] div[id="description"] yt-formatted-string')[0].innerHTML;
   var followers = doc.querySelectorAll('div[class="style-scope ytd-video-owner-renderer"] yt-formatted-string[id="owner-sub-count"]')[0].innerHTML;
+    
+    reg=new RegExp("<.[^>]*>", "gi" );
+    description=description.replace(reg, "" );
 
     dataToSend.host_video.channel_name = channel_name;
     dataToSend.host_video.channel_link = channel_link;
     dataToSend.host_video.channel_img = channelImg;
     dataToSend.host_video.channel_description = description;
-    dataToSend.host_video.nbr_followers = followers;
+    dataToSend.host_video.nbr_followers = followers.replace("&nbsp;"," ").replace("&nbsp;"," ");
 
 }
 
