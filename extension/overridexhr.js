@@ -387,7 +387,7 @@ XHR.send = function(postData) {
               if(oldLink=="" && newAd != "") {oldLink = newAd; newAd = "";}
             }
 
-            console.log("oldLink "+oldLink +" new ad"+newAd);
+            console.log("oldLink "+oldLink +" new ad "+newAd);
             }
             if(oldLink!=""){  adLink ="https://www.youtube.com/watch?v="+oldLink;
                              }
@@ -442,11 +442,11 @@ XHR.send = function(postData) {
                        data.ad.checked_or_not = Adcheked; Adcheked = false;
                        data.ad.reason_cheked = reasonsCheked; reasonsCheked = false;
                        data.host_video.channel_cheked = channelCheked; channelCheked = false;
-                      
+                       oldLink = "";
                        sendDataToBackground(data); 
                        sendAd = true;
                        ad = false;
-                       oldLink = "";
+                       
                   }
 
                       console.log("this is not an ad");
@@ -511,6 +511,7 @@ XHR.send = function(postData) {
                     if (sendAd == true){
                       var notification = new Notification("Hi there!", {body: "the add was collected"});
                       setTimeout(function() {notification.close()}, 5000);
+                      oldLink = "";
 
                           
                     }
