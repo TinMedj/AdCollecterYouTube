@@ -56,7 +56,8 @@ function getAdvertiserInfo(doc,dataToSend){
         var adChannelLink = adChannel.getAttribute("href"); dataToSend.ad.ad_channel_link ="https://www.youtube.com"+adChannelLink;
         var adChannelName = adChannel.innerHTML; dataToSend.ad.ad_channel_name = adChannelName;
         var adImg = doc.querySelectorAll('.ytp-title-channel a')[0];
-        var adImgLink = adImg.getAttribute("style"); dataToSend.ad.ad_channel_img = adImgLink; 
+        var adImgLink = adImg.getAttribute("style"); 
+        if(adImgLink!=null) dataToSend.ad.ad_channel_img = adImgLink; 
     }
 
     var secondCheckPoint = doc.getElementsByClassName("ytp-ad-player-overlay-flyout-cta");
@@ -101,7 +102,7 @@ function getVideoHostDetails(doc,dataToSend){
 
     dataToSend.host_video.channel_name = channel_name;
     dataToSend.host_video.channel_link = channel_link;
-    dataToSend.host_video.channel_img = channelImg;
+    if(channelImg!=null) dataToSend.host_video.channel_img = channelImg;
     dataToSend.host_video.channel_description = description;
     dataToSend.host_video.nbr_followers = followers.replace("&nbsp;"," ").replace("&nbsp;"," ");
 
@@ -142,7 +143,7 @@ function getUser(doc,dataToSend){
          dataToSend.ad_floating.title.push(dialogMsgFloatAdTitle2);
          dataToSend.ad_floating.description.push(dialogMsgFloatAdDsc2);
          dataToSend.ad_floating.link.push(dialogMsgFloatAdLink2);
-         dataToSend.ad_floating.img = floatAdImg;  
+         if(floatAdImg!=null) dataToSend.ad_floating.img = floatAdImg;  
 
 
 
@@ -252,10 +253,19 @@ function getUser(doc,dataToSend){
 
   };
 
+
+
   var adFloatCheking = function(){
       adFloatCheked = true;
   };
 
+  function getLandingURL(request){
+    
+    if (request._url.indexOf("get_midroll_info")> -1){
+      reponse = request.responseText;
+      console.log("this is the reponse: "+JSON.parse(reponse));    
+  }
+  }
 
 
   function adFloatingListener(){
@@ -301,6 +311,7 @@ var nbrClick = 0;
 var data = null;
 var floatData = null;
 var shouldSend = false;
+var landingURL = "";
  var oldData =  
 {
        title :["",""],
@@ -342,8 +353,8 @@ XHR.send = function(postData) {
               nbr_followers : "",
               total_views : "",
               partial_views : "",
-              channel_description : "",
-              channel_cheked : false
+              channel_description : ""
+              
         },
         ad_or_not : false,
         ad : {
@@ -358,7 +369,8 @@ XHR.send = function(postData) {
               ad_page_link : "",
               skeept_or_not : false,
               checked_or_not : false,
-              reason_cheked : false
+              reason_cheked : false,
+              channel_cheked : false
         },
         ad_floating:{
 
@@ -373,6 +385,11 @@ XHR.send = function(postData) {
         ad_reasons :[]
     };
 
+              if (this._url.indexOf("get_midroll_info")> -1){
+                reponse = JSON.parse(this.responseText);
+                land = reponse["playerAds"][0]["adPlacementRenderer"]["renderer"]["invideoOverlayAdRenderer"]["contentSupportedRenderer"]["imageOverlayAdContentRenderer"]["navigationEndpoint"]["urlEndpoint"]["url"]; 
+                if (land != null) landingURL = land;  
+            }
            
             var myUrl = this._url ;
             console.log("url"+myUrl);
@@ -441,7 +458,7 @@ XHR.send = function(postData) {
                        data.ad.skeept_or_not = adSkept; adSkept = false;
                        data.ad.checked_or_not = Adcheked; Adcheked = false;
                        data.ad.reason_cheked = reasonsCheked; reasonsCheked = false;
-                       data.host_video.channel_cheked = channelCheked; channelCheked = false;
+                       data.ad.channel_cheked = channelCheked; channelCheked = false;
                        oldLink = "";
                        sendDataToBackground(data); 
                        sendAd = true;
@@ -460,8 +477,10 @@ XHR.send = function(postData) {
 
 
                       console.log("this is a floating ad");
+                     // getLandingURL(this);
                       
                       getFloatingAd(document,dataToSend);
+                      if(landingURL != "") dataToSend.ad_floating.link.push(landingURL);
                       
                       if (!isTheSame(dataToSend,oldData) ){
                         if(shouldSend){
@@ -471,6 +490,7 @@ XHR.send = function(postData) {
                            sendDataToBackground(floatData);
                            shouldSend = false;
                            sendAd = true;
+                           landingURL = "";
                         }
                         oldData = dataToSend.ad_floating;
                         getVideoHostDetails(document,dataToSend);
@@ -501,6 +521,7 @@ XHR.send = function(postData) {
                             floatAd = false;
                             sendAd = true;
                             shouldSend = false;
+                            landingURL = "";
                           }
 
 
@@ -509,7 +530,7 @@ XHR.send = function(postData) {
                    
 
                     if (sendAd == true){
-                      var notification = new Notification("Hi there!", {body: "the add was collected"});
+                      var notification = new Notification("Hi there!", {body: "the ad was collected"});
                       setTimeout(function() {notification.close()}, 5000);
                       oldLink = "";
 

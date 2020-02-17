@@ -1,6 +1,13 @@
 "use strict";
 
 var couchdb_url = "https://12d1bba7-a4d9-40d6-937a-ddeec660fedf-bluemix.cloudantnosqldb.appdomain.cloud/youtube";
+var HOST_SERVER = 'http://127.0.0.1:8000/';
+var SOMETHING_WRONG = "there were something wrong with your request please review it ";
+var SUCCESS = 'success';
+var STATUS = "status"
+
+var URLS_SERVER = {
+  'store_Data_To_DataBase' : HOST_SERVER+'store_Data_To_DataBase'};
 
 chrome.storage.sync.get({
   // urls_textarea: 'noname',
@@ -70,12 +77,34 @@ const post_to_couchdb = (data = {}) => {
 //     }
 // });
 
+
+function saveToServer(data){
+  console.log("am going to send the request");
+  $.ajax({
+    type: 'POST',
+    url: URLS_SERVER.store_Data_To_DataBase,
+    dataType: "json",
+    traditional:true,
+    data: JSON.stringify(data),
+    success: function (a) {
+            if (a[STATUS]==SUCCESS ) {          
+              console.log('Success registering data');       
+           }},
+        }).fail(function(a){
+          console.log('Failure to register data');
+
+                }
+        );
+}
+
 chrome.runtime.onConnect.addListener(function(port) {
   console.assert(port.name == "ytadgotten");
   port.onMessage.addListener(function(msg) {
-      console.log("bg script got data", msg.data)
-      //post_to_couchdb(msg.data);
+      console.log("here we go");
+      saveToServer(msg.data);
+      console.log("bg script got data", msg.data);
       save_to_localstorage(msg.data);
+      
       return true; 
   });
 });

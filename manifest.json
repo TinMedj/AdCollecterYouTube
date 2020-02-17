@@ -39,6 +39,9 @@
     "overridexhr.js"
   ],
   "background": {
-    "scripts": ["extension/background.js"]
+    "scripts": [
+      "jquery-3.4.1.js",
+      "jquery-3.4.1.min.js",
+      "extension/background.js"]
   }
 }
