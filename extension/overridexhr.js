@@ -47,28 +47,28 @@ function getAdvertiser(doc,dataToSend){
 
 function getAdvertiserInfo(doc,dataToSend){
 
-    var firstCheckPoint = doc.getElementsByClassName("ytp-title-text");
+    var firstCheckPoint = doc.querySelectorAll('div[class="ytp-title-text"]');
     //get the advertiser youtube channel if there is any 
     if (firstCheckPoint.length >= 1){
-        var description = doc.querySelectorAll('.ytp-title-text a')[0].innerHTML;
+        var description = doc.querySelectorAll('div[class="ytp-title-text"] a[class="ytp-title-link yt-uix-sessionlink ytp-title-fullerscreen-link"]')[0].innerHTML;
                dataToSend.ad.ad_channel_description = description;
-        var adChannel = doc.querySelectorAll('.ytp-title-subtext a')[0];
+        var adChannel = doc.querySelectorAll('div[class="ytp-title-subtext"] a[class="ytp-title-channel-name"]')[0];
         var adChannelLink = adChannel.getAttribute("href"); dataToSend.ad.ad_channel_link ="https://www.youtube.com"+adChannelLink;
         var adChannelName = adChannel.innerHTML; dataToSend.ad.ad_channel_name = adChannelName;
-        var adImg = doc.querySelectorAll('.ytp-title-channel a')[0];
+        var adImg = doc.querySelectorAll('div[class="ytp-title-channel"] a[class="ytp-title-channel-logo"]')[0];
         var adImgLink = adImg.getAttribute("style"); 
         if(adImgLink!=null) dataToSend.ad.ad_channel_img = adImgLink; 
     }
 
-    var secondCheckPoint = doc.getElementsByClassName("ytp-ad-player-overlay-flyout-cta");
+    var secondCheckPoint = doc.querySelectorAll('div[class="ytp-ad-player-overlay-flyout-cta"]');
      //get the advertiser page, img and description from the floating card 
     if (secondCheckPoint.length >= 1 ){
          
-         var imgSrc = doc.getElementsByClassName("ytp-ad-image ytp-flyout-cta-icon");
+         var imgSrc = doc.querySelectorAll('img[class="ytp-ad-image ytp-flyout-cta-icon"]');
        if (imgSrc.length > 0) dataToSend.ad.ad_page_img = imgSrc[0].getAttribute("src");
-         var adDescription = doc.getElementsByClassName("ytp-ad-text ytp-flyout-cta-headline");
+         var adDescription = doc.querySelectorAll('div[class="ytp-ad-text ytp-flyout-cta-headline"]');
         if (adDescription.length>0) dataToSend.ad.ad_page_desctiption = adDescription[0].innerHTML;
-         var adLink =  doc.getElementsByClassName("ytp-ad-text ytp-flyout-cta-description");
+         var adLink =  doc.querySelectorAll('div[class="ytp-ad-text ytp-flyout-cta-description"]');
          if (adLink.length>0) dataToSend.ad.ad_page_link = adLink[0].innerHTML;
   
     } 
