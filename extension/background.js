@@ -1,7 +1,7 @@
 "use strict";
 
 var couchdb_url = "https://12d1bba7-a4d9-40d6-937a-ddeec660fedf-bluemix.cloudantnosqldb.appdomain.cloud/youtube";
-var HOST_SERVER = 'https://adanalystplus.imag.fr/';
+var HOST_SERVER = 'https://lig-adanalystplus-test.imag.fr/';
 var SOMETHING_WRONG = "there were something wrong with your request please review it ";
 var SUCCESS = 'success';
 var STATUS = "status"
