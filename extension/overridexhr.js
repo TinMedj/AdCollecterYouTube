@@ -349,9 +349,9 @@ XHR.send = function(postData) {
         country : "",
         time : "",
         user : {
-              id : "",
-              name : "none",
-              email : 'none'
+              id : "UnknownId",
+              name : "user",
+              email : 'email'
         },
         host_video :{
               name : "",
