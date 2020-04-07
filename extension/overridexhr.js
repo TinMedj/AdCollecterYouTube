@@ -43,6 +43,15 @@ function getAdvertiser(doc,dataToSend){
  
 }
 
+// get the geolocalisation of the user 
+
+function getLocalisation(doc, dataToSend){
+ 
+var elem = doc.querySelectorAll('ytd-topbar-logo-renderer[id="logo"] span[id="country-code"]')[0];
+dataToSend.country = elem.innerHTML;
+
+}  
+
 //this function gives more details about the advertiser, his channel if there is any,the link to the site and the description 
 
 function getAdvertiserInfo(doc,dataToSend){
@@ -337,6 +346,7 @@ XHR.send = function(postData) {
           let dataToSend =
                           {
         connected : false,
+        country : "",
         time : "",
         user : {
               id : "",
@@ -425,7 +435,8 @@ XHR.send = function(postData) {
             if (window.location.href.indexOf("watch")> -1) {
                
                 
-               
+               getLocalisation(document,dataToSend);
+               console.log("country "+dataToSend.country);
                 
                 //test if it's an ad or not !
                 if(document.getElementsByClassName("ytp-ad-player-overlay-instream-info").length > 0){
