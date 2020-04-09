@@ -123,12 +123,14 @@ function getVideoHostDetails(doc,dataToSend){
 function getUser(doc,dataToSend){
 
       
-      var userName = doc.getElementById("account-name").getAttribute("title");
-      var userEmail = doc.getElementById("email").getAttribute("title");
+      var userName = doc.querySelectorAll('yt-formatted-string[id="account-name"]')[0].getAttribute("title");
+      var userEmail = doc.querySelectorAll('yt-formatted-string[id="email"]')[0].getAttribute("title");
       var idUser = window["ytInitialData"]["responseContext"]["serviceTrackingParams"][1]["params"][1]["value"];
       console.log("idUser "+idUser);
         dataToSend.user.name = userName;
         dataToSend.user.email = userEmail;
+        console.log("email :"+dataToSend.user.email)
+        console.log("name :"+dataToSend.user.name)
         dataToSend.user.id = idUser;
 
       
