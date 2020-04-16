@@ -1,7 +1,7 @@
 "use strict";
 
 var couchdb_url = "https://12d1bba7-a4d9-40d6-937a-ddeec660fedf-bluemix.cloudantnosqldb.appdomain.cloud/youtube";
-var HOST_SERVER = 'https://lig-adanalystplus-test.imag.fr/StoreToDB/';
+var HOST_SERVER = 'https://lig-adanalystplus-test.imag.fr/';
 var SOMETHING_WRONG = "there were something wrong with your request please review it ";
 var SUCCESS = 'success';
 var STATUS = "status"
@@ -78,11 +78,33 @@ const post_to_couchdb = (data = {}) => {
 // });
 
 
+/*function saveToServer(data){
+  console.log("am going to send the request");
+  $.ajax({
+    type: 'POST',
+    url: URLS_SERVER.store_Data_To_DataBase,
+    dataType: "json",
+    traditional:true,
+    data: JSON.stringify(data),
+    success: function (a) {
+            if (a[STATUS]==SUCCESS ) {          
+              console.log('Success registering data');       
+           }},
+        }).fail(function(a){
+          console.log('Failure to register data');
+
+                }
+        );
+}*/
+
+
+
 function saveToServer(data){
   console.log("am going to send the request");
   $.ajax({
     type: 'POST',
     url: URLS_SERVER.store_Data_To_DataBase,
+    //contentType: "application/json",
     dataType: "json",
     traditional:true,
     data: JSON.stringify(data),
