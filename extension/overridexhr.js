@@ -125,12 +125,13 @@ function getUser(doc,dataToSend){
       
       var userName = doc.querySelectorAll('yt-formatted-string[id="account-name"]')[0].getAttribute("title");
       var userEmail = doc.querySelectorAll('yt-formatted-string[id="email"]')[0].getAttribute("title");
-      var idUser = window["ytInitialData"]["responseContext"]["serviceTrackingParams"][1]["params"][1]["value"];
+      var idUser = userName+''+userEmail
       console.log("idUser "+idUser);
         dataToSend.user.name = userName;
         dataToSend.user.email = userEmail;
-        console.log("email :"+dataToSend.user.email)
-        console.log("name :"+dataToSend.user.name)
+        console.log("email :"+dataToSend.user.email);
+        console.log("name :"+dataToSend.user.name);
+        console.log("id :"+idUser);
         dataToSend.user.id = idUser;
 
       
@@ -405,7 +406,7 @@ XHR.send = function(postData) {
            
             var myUrl = this._url ;
             console.log("url"+myUrl);
-            console.log("variable globale :"+window["ytInitialData"]["responseContext"]["serviceTrackingParams"][1]["params"][1]["value"]);
+            //console.log("variable globale :"+window["ytInitialData"]["responseContext"]["serviceTrackingParams"][1]["params"][1]["value"]);
             if (id_ad == "") {
             id_ad = getAdUrl(myUrl);
             if(id_ad!=""){
@@ -430,6 +431,9 @@ XHR.send = function(postData) {
                     dataToSend.connected = true;
                     console.log("connected "+dataToSend.connected);
                    getUser(document,dataToSend);
+                   console.log("email :"+dataToSend.user.email);
+                   console.log("name :"+dataToSend.user.name);
+                   console.log("id :"+idUser);
                    
                 }
              }
