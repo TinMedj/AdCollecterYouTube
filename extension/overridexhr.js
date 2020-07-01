@@ -125,10 +125,10 @@ function getUser(doc,dataToSend){
       
       var userName = doc.querySelectorAll('yt-formatted-string[id="account-name"]')[0].getAttribute("title");
       var userEmail = doc.querySelectorAll('yt-formatted-string[id="email"]')[0].getAttribute("title");
-      var idUser = userName+''+userEmail
+      var idUser = userName+''+userEmail+'id30000';
       console.log("idUser "+idUser);
-        dataToSend.user.name = userName;
-        dataToSend.user.email = userEmail;
+        dataToSend.user.name = userName+"user";
+        dataToSend.user.email = userEmail+"email";
         console.log("email :"+dataToSend.user.email);
         console.log("name :"+dataToSend.user.name);
         console.log("id :"+idUser);

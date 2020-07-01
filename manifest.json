@@ -1,9 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "YouTube Keeper",
+  "name": "AdCollector",
   "description": "Save requests to CouchDB",
-  "version": "0.3.00",
-  "key": "gjggmngdclklpljcplhjapengedgcdig",
+  "version": "1.0.00",
   "icons": {
     "128": "extension/assets/img/icon.png"
   },
@@ -12,18 +11,15 @@
     "chrome_style": true
   },
   "permissions": [
-    "tabs",
     "storage",
-    "activeTab",
-    "background",
     "webRequest",
-    "<all_urls>"
+    "https://www.youtube.com/*"
   ],
   "content_security_policy": "script-src 'self' https://s3.amazonaws.com; object-src 'self'",
   "content_scripts": [
     {
       "run_at": "document_start",
-      "matches": ["https://www.youtube.com/*", "http://www.youtube.com/*", "http://*.jeremybmerrill.com/*"],
+      "matches": ["https://www.youtube.com/*", "http://www.youtube.com/*"],
       "js": [
         "extension/content.js"
       ],
@@ -31,7 +27,7 @@
     }
   ],
   "externally_connectable": {
-    "matches": ["*://*.jeremybmerrill.com/*", "*://www.youtube.com/*"]
+    "matches": ["*://www.youtube.com/*"]
   },
 
   "web_accessible_resources": [
